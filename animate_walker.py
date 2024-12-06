@@ -1,11 +1,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
-
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
-import numpy as np
-from matplotlib.patches import Ellipse  # Import Ellipse here
+from matplotlib.patches import Ellipse
 
 # Function to draw the spider
 def draw_spider(ax, position, num_legs, leg_states):
@@ -15,9 +11,6 @@ def draw_spider(ax, position, num_legs, leg_states):
     leg_length = 1   # Total length of each leg (split into two segments)
     base_angles = np.linspace(0, 2 * np.pi, num_legs, endpoint=False)  # Leg angles
     joint_offset = 0.2  # Offset for the "knee" joint of each leg
-
-    # Clear previous drawing
-    ax.clear()
 
     # Draw the body (ellipse)
     body = Ellipse(position, body_width, body_height, color='black', zorder=10)
@@ -57,10 +50,23 @@ def animate_spider(leg_matrix, x_coords, y_coords):
     y_min, y_max = min(y_coords) - margin, max(y_coords) + margin
 
     fig, ax = plt.subplots()
+    trail_x, trail_y = [], []  # To store the trail coordinates
 
     def update(frame):
         position = (x_coords[frame], y_coords[frame])
         leg_states = leg_matrix[frame]
+
+        # Add the current position to the trail
+        trail_x.append(position[0])
+        trail_y.append(position[1])
+
+        # Clear previous frame
+        ax.clear()
+
+        # Draw the trail
+        ax.plot(trail_x, trail_y, color='blue', lw=2, zorder=5)
+
+        # Draw the spider
         draw_spider(ax, position, num_legs, leg_states)
 
         # Set plot limits and maintain the aspect ratio
@@ -69,5 +75,5 @@ def animate_spider(leg_matrix, x_coords, y_coords):
         ax.set_aspect('equal', adjustable='datalim')
         ax.axis('off')  # Turn off the axes for better visualization
 
-    ani = animation.FuncAnimation(fig, update, frames=num_frames, interval=100, repeat=True)
+    ani = animation.FuncAnimation(fig, update, frames=num_frames, interval=100, repeat=False)
     plt.show()

@@ -1,4 +1,3 @@
-import numpy as np
 import random
 import math
 import noisy_walker_v5a as walker
@@ -94,6 +93,7 @@ def mcts(T, state, trajectory, depth=3, simulations=100, gamma=0.9, exploration_
 def simulate(T, state, trajectory, depth, gamma, exploration_param):
     if depth <= 0:
         return calculate_total_reward(trajectory)
+        # return calculate_total_reward(trajectory[-1:])
     
     # Initialize visit count and Q-value for state-action pairs if not visited
     if not any((state, action) in N for action in T[state].keys()):
@@ -101,6 +101,7 @@ def simulate(T, state, trajectory, depth, gamma, exploration_param):
             N[(state, action)] = 0
             Q[(state, action)] = 0.0
         return calculate_total_reward(trajectory)
+        # return calculate_total_reward(trajectory[-1:])
     
     action = explore(T, state, exploration_param)
     
@@ -113,6 +114,7 @@ def simulate(T, state, trajectory, depth, gamma, exploration_param):
     # This is equivalent to the "next state" of the trajectory
     trajectory.append((state, action))
     reward = calculate_total_reward(trajectory)
+    # return calculate_total_reward(trajectory[-1:])
 
     # Recursively simulate the outcome and compute the discounted reward
     q = reward + gamma * simulate(T, next_state, trajectory, depth - 1, gamma, exploration_param)
@@ -187,7 +189,7 @@ T = transition_model()
 start_state_list = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # Example starting leg positions
 # convert to a state value by first creating a binary representation and converting to a base 10 value
 start_state = int("".join(map(str, start_state_list)), 2)
-trajectory_mcts = run_simulation_mcts(T, start_state, steps=15, depth=4, gamma=0.9, exploration_param=10)
+trajectory_mcts = run_simulation_mcts(T, start_state, steps=20, depth=4, gamma=0.9, exploration_param=10)
 
 animation_trajectory = []
 legs_to_move_vector = []

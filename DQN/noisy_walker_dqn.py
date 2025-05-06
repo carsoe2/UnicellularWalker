@@ -3,7 +3,7 @@ import gymnasium as gym
 from gymnasium import spaces
 import numpy as np
 import re
-import DQN.noisy_walker_v6 as v6
+import noisy_walker_v6 as v6
 
 import torch
 import torch.nn as nn
@@ -165,7 +165,7 @@ class LegWalkerEnv(gym.Env):
         return self.obs, reward, self.terminated, self.truncated, self.info
 
 # used to separate file reading from the evironment reset to speed up the runtime
-def get_initial_position(infile='./input_files/cirrus_testfile_full_rotation.txt'):
+def get_initial_position(infile='../input_files/cirrus_testfile_full_rotation.txt'):
     with open(infile, 'r') as fid:
         numlines = 0
         big_string = ""
@@ -280,7 +280,7 @@ if __name__ == '__main__':
         run_and_animate_model(None, env)
     else:
         ### Set to false if model should be loaded
-        train = True
+        train = False
         if train:
             # Train model
             model = train_dqn(env)
